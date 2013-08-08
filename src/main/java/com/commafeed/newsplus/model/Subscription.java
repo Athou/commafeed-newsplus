@@ -18,6 +18,7 @@ public class Subscription implements Serializable {
 	private long unread;
 	private String categoryId;
 	private Integer position;
+	private Date newestItemTime;
 
 	public Long getId() {
 		return id;
@@ -113,6 +114,14 @@ public class Subscription implements Serializable {
 
 	public void setPosition(Integer position) {
 		this.position = position;
+	}
+
+	public Date getNewestItemTime() {
+		return newestItemTime;
+	}
+
+	public void setNewestItemTime(Date newestItemTime) {
+		this.newestItemTime = newestItemTime;
 	}
 
 }

@@ -25,11 +25,7 @@ import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Post;
 import com.googlecode.androidannotations.annotations.rest.Rest;
 
-// Ensure that my ignorance of API changes doesn't break the client
 @JsonIgnoreProperties(ignoreUnknown = true)
-// DO NOT INSTANTIATE CLIENTS FROM HERE
-// Use RestProxy.getInstance() to get the single client object which
-// handles errors gracefully
 @Rest(converters = { MappingJacksonHttpMessageConverter.class })
 public interface CommaFeedClient {
 
@@ -53,13 +49,9 @@ public interface CommaFeedClient {
 	@Post("/category/mark")
 	void categoryMark(MarkRequest markRequest);
 
-	/*@Get("/category/entriesAsFeed?id={id}")
-	??? categoryEntriesAsFeed(int id);*/
-
 	@Post("/category/add")
 	void categoryAdd(AddCategoryRequest addCategoryRequest);
 
-	// See feedEntries
 	@Get("/category/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}")
 	Entries categoryEntries(String id, String readType, long newerThan, int offset, int limit, String order);
 
@@ -107,7 +99,7 @@ public interface CommaFeedClient {
 
 	@Post("/entry/mark")
 	void entryMark(MarkRequest markRequest);
-	
+
 	@Post("/entry/markMultiple")
 	void entryMarkMultiple(MultipleMarkRequest markRequest);
 
@@ -134,8 +126,6 @@ public interface CommaFeedClient {
 	@Post("/feed/modify")
 	void feedModify(FeedModificationRequest feedModificationRequest);
 
-
-	// Default values are readType=all newerThan=0 offset=0 limit=20 order=desc
 	@Get("/feed/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}")
 	Entries feedEntries(String id, String readType, long newerThan, int offset, int limit, String order);
 

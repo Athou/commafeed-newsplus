@@ -43,16 +43,16 @@ public class CommaFeedExtension extends ReaderExtension {
 	protected Context context;
 	private CommaFeedClient client;
 
-	public CommaFeedExtension(Context context) {
+	public CommaFeedExtension(final Context context) {
 		this.context = context;
 		CommaFeedClient_ client = new CommaFeedClient_();
-		client.setRootUrl("https://www.commafeed.com/rest/");
+		client.setRootUrl(Prefs.getServer(context) + "/rest/");
 		client.getRestTemplate().getInterceptors().add(new ClientHttpRequestInterceptor() {
 
 			@Override
 			public ClientHttpResponse intercept(HttpRequest req, byte[] body, ClientHttpRequestExecution execution) throws IOException {
 				HttpHeaders headers = req.getHeaders();
-				HttpAuthentication auth = new HttpBasicAuthentication("demo", "demo");
+				HttpAuthentication auth = new HttpBasicAuthentication(Prefs.getUserName(context), Prefs.getUserPassword(context));
 				headers.setAuthorization(auth);
 				return execution.execute(req, body);
 			}
@@ -102,7 +102,7 @@ public class CommaFeedExtension extends ReaderExtension {
 
 	@Override
 	public void handleItemIdList(IItemIdListHandler handler, long syncTime) throws IOException, ReaderException {
-
+		// TODO
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class CommaFeedExtension extends ReaderExtension {
 				item.updatedTime = entry.getInsertedDate().getTime();
 				items.add(item);
 			}
-
+			// TODO handle paging ("continuation")
 			handler.items(items, INSERT_STRATEGY_DEFAULT);
 		} catch (RemoteException e) {
 			throw new ReaderException("data parse error", e);
@@ -178,8 +178,7 @@ public class CommaFeedExtension extends ReaderExtension {
 			isub.title = sub.getName();
 			isub.unreadCount = (int) sub.getUnread();
 			isub.sortid = String.valueOf(sub.getPosition());
-			// TODO fill newestItemTime
-			isub.newestItemTime = 0;
+			isub.newestItemTime = sub.getNewestItemTime().getTime();
 
 			unreadCount += isub.unreadCount;
 			subs.add(isub);
@@ -201,20 +200,20 @@ public class CommaFeedExtension extends ReaderExtension {
 
 	@Override
 	public boolean disableTag(String tagUid, String label) throws IOException, ReaderException {
-		// not supported yet
+		// TODO
 		return false;
 	}
 
 	@Override
 	public boolean editItemTag(String[] itemUids, String[] subUids, String[] addTags, String[] removeTags) throws IOException,
 			ReaderException {
-		// not supported yet
+		// TODO
 		return false;
 	}
 
 	@Override
 	public boolean renameTag(String tagUid, String oldLabel, String newLabel) throws IOException, ReaderException {
-		// not supported yet
+		// TODO
 		return false;
 	}
 
@@ -224,6 +223,7 @@ public class CommaFeedExtension extends ReaderExtension {
 			s = "all";
 			t = "all";
 		}
+		// TODO check what s and t mean
 		MarkRequest req = new MarkRequest();
 		req.setId(s);
 

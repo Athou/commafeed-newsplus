@@ -2,6 +2,7 @@ package com.commafeed.newsplus;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.noinnion.android.reader.api.ExtensionPrefs;
 
@@ -30,7 +31,8 @@ public class Prefs extends ExtensionPrefs {
 	}
 
 	public static String getServer(Context c) {
-		return getString(c, KEY_SERVER);
+		String server = getString(c, KEY_SERVER);
+		return TextUtils.isEmpty(server) ? "https://www.commafeed.com" : server;
 	}
 
 	public static void setServer(Context c, String server) {
