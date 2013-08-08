@@ -1,0 +1,20 @@
+# Build
+bin
+target
+gen
+
+# Eclipse files
+.project
+.classpath
+.settings
+.factorypath
+
+# IntelliJ Idea files
+.idea
+*.iml
+
+# Sublime
+*.sublime*
+
+# Macs
+*.DS_Store
