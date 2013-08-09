@@ -184,8 +184,8 @@ public class CommaFeedExtension extends ReaderExtension {
 		MultipleMarkRequest mmr = new MultipleMarkRequest();
 		for (int i = 0; i < itemUids.length; i++) {
 			MarkRequest req = new MarkRequest();
-			req.setFeedId(Long.valueOf(subUids[i]));
-			req.setId(itemUids[i]);
+			req.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
+			req.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
 			req.setRead(true);
 		}
 		client.entryMarkMultiple(mmr);
@@ -197,8 +197,8 @@ public class CommaFeedExtension extends ReaderExtension {
 		MultipleMarkRequest mmr = new MultipleMarkRequest();
 		for (int i = 0; i < itemUids.length; i++) {
 			MarkRequest req = new MarkRequest();
-			req.setFeedId(Long.valueOf(subUids[i]));
-			req.setId(itemUids[i]);
+			req.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
+			req.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
 			req.setRead(false);
 		}
 		client.entryMarkMultiple(mmr);
