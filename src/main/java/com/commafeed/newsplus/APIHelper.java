@@ -54,7 +54,9 @@ public class APIHelper {
 		isub.title = sub.getName();
 		isub.unreadCount = (int) sub.getUnread();
 		isub.sortid = String.valueOf(sub.getPosition());
-		isub.newestItemTime = sub.getNewestItemTime().getTime();
+		if (sub.getNewestItemTime() != null) {
+			isub.newestItemTime = sub.getNewestItemTime().getTime();
+		}
 		return isub;
 	}
 
@@ -88,7 +90,7 @@ public class APIHelper {
 		}
 		return item;
 	}
-	
+
 	public static String removeTrailingSlash(String url) {
 		if (url.endsWith("/")) {
 			url = url.substring(0, url.length() - 1);
