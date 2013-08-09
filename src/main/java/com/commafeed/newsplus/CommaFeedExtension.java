@@ -15,7 +15,6 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.commafeed.newsplus.model.Category;
 import com.commafeed.newsplus.model.Entries;

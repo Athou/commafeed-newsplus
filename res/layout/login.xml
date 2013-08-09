@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:text="@string/client_google_reader"
+            android:text="@string/login_title"
             android:textColor="#333"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="5dp"
-            android:text="@string/google_reader_login_welcome"
+            android:text="@string/login_subtitle"
             android:textColor="#333" />
 
         <LinearLayout

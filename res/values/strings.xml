@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CommaFeed extension for News+</string>
+    <string name="app_name">CommaFeed</string>
     <string name="icon">icon</string>
-    <string name="hello">Hello commafeed-newsplus!</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    
+
     <!-- Extension -->
     <string name="extension_name">CommaFeed</string>
     <string name="extension_description">CommaFeed extension for News+</string>
@@ -16,6 +13,8 @@
     <string name="msg_login_fail">Login failure</string>
 
     <!-- login -->
+    <string name="login_title">CommaFeed</string>
+    <string name="login_subtitle">CommaFeed extension for News+</string>
     <string name="login_welcome">Enter your login data (server, username and password)</string>
     <string name="login_server">Server</string>
     <string name="login_id">Username</string>
@@ -23,12 +22,11 @@
     <string name="txt_login">Login</string>
     <string name="txt_start_app">Start News+</string>
     <string name="txt_download_app">Download News+</string>
-
+    
+    <!-- welcome -->
+	<string name="welcome_subtitle">This app is an extension and requires News+.</string>
+	
     <!-- err -->
     <string name="err_io">Network error</string>
-
-    <!-- client -->
-    <string name="client_google_reader">CommaFeed</string>
-    <string name="google_reader_login_welcome">CommaFeed extension for News+</string>
 
 </resources>
