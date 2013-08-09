@@ -34,6 +34,7 @@ import com.noinnion.android.reader.api.internal.IItemIdListHandler;
 import com.noinnion.android.reader.api.internal.IItemListHandler;
 import com.noinnion.android.reader.api.internal.ISubscriptionListHandler;
 import com.noinnion.android.reader.api.internal.ITagListHandler;
+import com.noinnion.android.reader.api.provider.IItem;
 import com.noinnion.android.reader.api.provider.ISubscription;
 import com.noinnion.android.reader.api.provider.ITag;
 
@@ -158,7 +159,7 @@ public class CommaFeedExtension extends ReaderExtension {
 		String uid = handler.stream();
 		String readType = handler.excludeRead() ? "unread" : "all";
 		String order = handler.newestFirst() ? "desc" : "asc";
-		int limit = handler.limit();
+		int limit = Math.min(handler.limit(), 50);
 		long newerThan = handler.startTime();
 
 		Entries entries = null;
@@ -174,9 +175,23 @@ public class CommaFeedExtension extends ReaderExtension {
 		} else {
 			throw new ReaderException("Unknown reading state");
 		}
-		if (!entries.getEntries().isEmpty()) {
-			handler.items(APIHelper.convertEntries(entries.getEntries()), INSERT_STRATEGY_DEFAULT);
+
+		int count = 0;
+		int length = 0;
+		List<IItem> items = new ArrayList<IItem>();
+		for (IItem item : APIHelper.convertEntries(entries.getEntries())) {
+			count++;
+			length += item.getLength();
+			items.add(item);
+			if (count == 200 || length > 300000) {
+				// prevent TransactionTooLargeException, android only allows 1mb per transaction
+				handler.items(items, INSERT_STRATEGY_DEFAULT);
+				count = 0;
+				length = 0;
+				items.clear();
+			}
 		}
+		handler.items(items, INSERT_STRATEGY_DEFAULT);
 		return entries;
 	}
 
