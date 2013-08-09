@@ -7,14 +7,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.noinnion.android.reader.api.ReaderException;
 import com.noinnion.android.reader.api.ReaderExtension;
 
-public class LoginActivity extends FragmentActivity implements OnClickListener {
+public class LoginActivity extends FragmentActivity implements OnClickListener, OnEditorActionListener {
 
 	private ProgressDialog busyDialog;
 
@@ -41,7 +43,10 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 
 		serverText = (TextView) findViewById(R.id.edit_server);
 		userNameText = (TextView) findViewById(R.id.edit_login_id);
+		userNameText.requestFocus();
+		userNameText.setOnEditorActionListener(this);
 		passwordText = (TextView) findViewById(R.id.edit_password);
+		passwordText.setOnEditorActionListener(this);
 
 		String server = Prefs.getServer(c);
 		if (server != null)
@@ -59,18 +64,28 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.btn_login:
-			String server = serverText.getText().toString();
-			String userName = userNameText.getText().toString();
-			String password = passwordText.getText().toString();
-			if (server.length() == 0 || userName.length() == 0 || password.length() == 0) {
-				AndroidUtils.showToast(this, getText(R.string.msg_login_fail));
-			} else {
-				new SaveInputLoginTask().execute(server, userName, password);
-			}
+			login();
 			break;
 		case R.id.btn_cancel:
 			finish();
 			break;
+		}
+	}
+
+	@Override
+	public boolean onEditorAction(TextView view, int actionId, KeyEvent e) {
+		login();
+		return true;
+	}
+
+	private void login() {
+		String server = serverText.getText().toString();
+		String userName = userNameText.getText().toString();
+		String password = passwordText.getText().toString();
+		if (server.length() == 0 || userName.length() == 0 || password.length() == 0) {
+			AndroidUtils.showToast(this, getText(R.string.msg_login_fail));
+		} else {
+			new SaveInputLoginTask().execute(server, userName, password);
 		}
 	}
 
