@@ -15,7 +15,6 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import android.content.Context;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.commafeed.newsplus.model.Category;
 import com.commafeed.newsplus.model.Entries;
@@ -39,8 +38,6 @@ import com.noinnion.android.reader.api.provider.ISubscription;
 import com.noinnion.android.reader.api.provider.ITag;
 
 public class CommaFeedExtension extends ReaderExtension {
-
-	private static final String TAG = "CommaFeedExtension";
 
 	private CommaFeedClient client;
 
@@ -82,9 +79,7 @@ public class CommaFeedExtension extends ReaderExtension {
 	@Override
 	public void handleReaderList(ITagListHandler tagHandler, ISubscriptionListHandler subHandler, long syncTime) throws IOException,
 			ReaderException {
-		Log.i(TAG, "handleReaderList");
 		Category root = client.categoryGet();
-		Log.i(TAG, "" + root.getChildren().size());
 		List<ITag> tags = new ArrayList<ITag>();
 		List<ISubscription> subs = new ArrayList<ISubscription>();
 		handleCategory(root, tags, subs);
