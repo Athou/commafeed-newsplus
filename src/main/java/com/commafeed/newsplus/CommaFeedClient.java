@@ -50,7 +50,7 @@ public interface CommaFeedClient {
 	void categoryMark(MarkRequest markRequest);
 
 	@Post("/category/add")
-	void categoryAdd(AddCategoryRequest addCategoryRequest);
+	Long categoryAdd(AddCategoryRequest addCategoryRequest);
 
 	@Get("/category/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}")
 	Entries categoryEntries(String id, String readType, long newerThan, int offset, int limit, String order);
