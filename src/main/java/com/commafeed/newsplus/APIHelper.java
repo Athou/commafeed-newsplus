@@ -57,6 +57,9 @@ public class APIHelper {
 		if (sub.getNewestItemTime() != null) {
 			isub.newestItemTime = sub.getNewestItemTime().getTime();
 		}
+		if (sub.getCategoryId() != null) {
+			isub.addCategory(PREFIX_CAT + sub.getCategoryId());
+		}
 		return isub;
 	}
 

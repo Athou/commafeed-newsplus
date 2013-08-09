@@ -15,6 +15,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.commafeed.newsplus.model.Category;
 import com.commafeed.newsplus.model.Entries;
@@ -117,20 +118,21 @@ public class CommaFeedExtension extends ReaderExtension {
 
 			Entries entries = null;
 			if (uid.startsWith(ReaderExtension.STATE_STARRED)) {
-				entries = client.categoryEntries("starred", readType, newerThan, 0, limit, order);
+				entries = client.categoryEntries("starred", readType, newerThan, 0, limit, order, true);
 			} else if (uid.startsWith(ReaderExtension.STATE_READING_LIST)) {
-				entries = client.categoryEntries("all", readType, newerThan, 0, limit, order);
+				entries = client.categoryEntries("all", readType, newerThan, 0, limit, order, true);
 			} else if (APIHelper.isSubscription(uid)) {
-				entries = client.feedEntries(APIHelper.convertID(uid, APIHelper.PREFIX_SUB), readType, newerThan, 0, limit, order);
+				entries = client.feedEntries(APIHelper.convertID(uid, APIHelper.PREFIX_SUB), readType, newerThan, 0, limit, order, true);
 			} else if (APIHelper.isCategory(uid)) {
-				entries = client.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, 0, limit, order);
+				entries = client
+						.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, 0, limit, order, true);
 			} else {
 				throw new ReaderException("Unknown reading state");
 			}
 
 			List<String> list = new ArrayList<String>();
 			for (Entry entry : entries.getEntries()) {
-				list.add(APIHelper.convertEntry(entry).uid);
+				list.add(APIHelper.PREFIX_ENTRY + entry.getId());
 			}
 			handler.items(list);
 		} catch (RemoteException e) {
@@ -141,29 +143,42 @@ public class CommaFeedExtension extends ReaderExtension {
 	@Override
 	public void handleItemList(IItemListHandler handler, long syncTime) throws IOException, ReaderException {
 		try {
-			String uid = handler.stream();
-			String readType = handler.excludeRead() ? "unread" : "all";
-			String order = handler.newestFirst() ? "desc" : "asc";
-			int limit = handler.limit();
-			long newerThan = handler.startTime();
-
-			Entries entries = null;
-			if (uid.startsWith(ReaderExtension.STATE_STARRED)) {
-				entries = client.categoryEntries("starred", readType, newerThan, 0, limit, order);
-			} else if (uid.startsWith(ReaderExtension.STATE_READING_LIST)) {
-				entries = client.categoryEntries("all", readType, newerThan, 0, limit, order);
-			} else if (APIHelper.isSubscription(uid)) {
-				entries = client.feedEntries(APIHelper.convertID(uid, APIHelper.PREFIX_SUB), readType, newerThan, 0, limit, order);
-			} else if (APIHelper.isCategory(uid)) {
-				entries = client.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, 0, limit, order);
-			} else {
-				throw new ReaderException("Unknown reading state");
+			boolean hasMore = true;
+			int offset = 0;
+			while (hasMore && handler.continuation()) {
+				Entries entries = handleItemList(handler, offset);
+				hasMore = entries.isHasMore();
+				offset += entries.getEntries().size();
 			}
-
-			handler.items(APIHelper.convertEntries(entries.getEntries()), INSERT_STRATEGY_DEFAULT);
 		} catch (RemoteException e) {
 			throw new ReaderException("ItemID handler error", e);
 		}
+	}
+
+	private Entries handleItemList(IItemListHandler handler, int offset) throws IOException, ReaderException, RemoteException {
+		String uid = handler.stream();
+		String readType = handler.excludeRead() ? "unread" : "all";
+		String order = handler.newestFirst() ? "desc" : "asc";
+		int limit = handler.limit();
+		long newerThan = handler.startTime();
+
+		Entries entries = null;
+		if (uid.startsWith(ReaderExtension.STATE_STARRED)) {
+			entries = client.categoryEntries("starred", readType, newerThan, offset, limit, order, false);
+		} else if (uid.startsWith(ReaderExtension.STATE_READING_LIST)) {
+			entries = client.categoryEntries("all", readType, newerThan, offset, limit, order, false);
+		} else if (APIHelper.isSubscription(uid)) {
+			entries = client.feedEntries(APIHelper.convertID(uid, APIHelper.PREFIX_SUB), readType, newerThan, offset, limit, order, false);
+		} else if (APIHelper.isCategory(uid)) {
+			entries = client.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, offset, limit, order,
+					false);
+		} else {
+			throw new ReaderException("Unknown reading state");
+		}
+		if (!entries.getEntries().isEmpty()) {
+			handler.items(APIHelper.convertEntries(entries.getEntries()), INSERT_STRATEGY_DEFAULT);
+		}
+		return entries;
 	}
 
 	@Override
@@ -187,6 +202,7 @@ public class CommaFeedExtension extends ReaderExtension {
 			req.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
 			req.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
 			req.setRead(true);
+			mmr.getRequests().add(req);
 		}
 		client.entryMarkMultiple(mmr);
 		return true;
@@ -200,6 +216,7 @@ public class CommaFeedExtension extends ReaderExtension {
 			req.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
 			req.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
 			req.setRead(false);
+			mmr.getRequests().add(req);
 		}
 		client.entryMarkMultiple(mmr);
 		return false;

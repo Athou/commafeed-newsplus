@@ -52,8 +52,8 @@ public interface CommaFeedClient {
 	@Post("/category/add")
 	Long categoryAdd(AddCategoryRequest addCategoryRequest);
 
-	@Get("/category/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}")
-	Entries categoryEntries(String id, String readType, long newerThan, int offset, int limit, String order);
+	@Get("/category/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}&onlyIds={onlyIds}")
+	Entries categoryEntries(String id, String readType, long newerThan, int offset, int limit, String order, boolean onlyIds);
 
 	@Post("/category/delete")
 	void categoryDelete(IDRequest idRequest);
@@ -126,8 +126,8 @@ public interface CommaFeedClient {
 	@Post("/feed/modify")
 	void feedModify(FeedModificationRequest feedModificationRequest);
 
-	@Get("/feed/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}")
-	Entries feedEntries(String id, String readType, long newerThan, int offset, int limit, String order);
+	@Get("/feed/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}&onlyIds={onlyIds}")
+	Entries feedEntries(String id, String readType, long newerThan, int offset, int limit, String order, boolean onlyIds);
 
 	@Get("/feed/fetch?title={title}&url={url}")
 	FeedInfo feedFetch(String title, String url);
