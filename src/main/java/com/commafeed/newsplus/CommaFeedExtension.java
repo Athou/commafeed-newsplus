@@ -2,6 +2,7 @@ package com.commafeed.newsplus;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpAuthentication;
@@ -14,6 +15,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.commafeed.newsplus.model.Category;
 import com.commafeed.newsplus.model.Entries;
@@ -38,15 +40,30 @@ import com.noinnion.android.reader.api.provider.ITag;
 
 public class CommaFeedExtension extends ReaderExtension {
 
-	protected Context context;
+	private static final String TAG = "CommaFeedExtension";
+
 	private CommaFeedClient client;
 
-	public CommaFeedExtension(final Context context) {
-		this.context = context;
-		CommaFeedClient_ client = new CommaFeedClient_();
-		client.setRootUrl(Prefs.getServer(context) + "/rest/");
-		client.getRestTemplate().getInterceptors().add(new ClientHttpRequestInterceptor() {
+	public CommaFeedExtension() {
 
+	}
+
+	public CommaFeedExtension(Context context) {
+		init(context);
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		init(getApplicationContext());
+	}
+
+	private void init(final Context context) {
+		super.onCreate();
+		CommaFeedClient_ client = new CommaFeedClient_();
+		client.setRootUrl(APIHelper.removeTrailingSlash(Prefs.getServer(context)) + "/rest");
+
+		ClientHttpRequestInterceptor interceptor = new ClientHttpRequestInterceptor() {
 			@Override
 			public ClientHttpResponse intercept(HttpRequest req, byte[] body, ClientHttpRequestExecution execution) throws IOException {
 				HttpHeaders headers = req.getHeaders();
@@ -54,7 +71,8 @@ public class CommaFeedExtension extends ReaderExtension {
 				headers.setAuthorization(auth);
 				return execution.execute(req, body);
 			}
-		});
+		};
+		client.getRestTemplate().setInterceptors(Arrays.asList(interceptor));
 		this.client = client;
 	}
 
@@ -64,8 +82,9 @@ public class CommaFeedExtension extends ReaderExtension {
 	@Override
 	public void handleReaderList(ITagListHandler tagHandler, ISubscriptionListHandler subHandler, long syncTime) throws IOException,
 			ReaderException {
-
+		Log.i(TAG, "handleReaderList");
 		Category root = client.categoryGet();
+		Log.i(TAG, "" + root.getChildren().size());
 		List<ITag> tags = new ArrayList<ITag>();
 		List<ISubscription> subs = new ArrayList<ISubscription>();
 		handleCategory(root, tags, subs);

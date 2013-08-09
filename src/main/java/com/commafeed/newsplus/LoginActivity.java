@@ -94,7 +94,7 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 			String userName = params[1];
 			String password = params[2];
 
-			final Context c = getApplicationContext();
+			Context c = getApplicationContext();
 			Prefs.setServer(c, server);
 			Prefs.setUserName(c, userName);
 			Prefs.setUserPassword(c, password);
@@ -119,7 +119,7 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 		}
 
 		protected void onPostExecute(Boolean result) {
-			final Context c = getApplicationContext();
+			Context c = getApplicationContext();
 			try {
 				if (busyDialog != null && busyDialog.isShowing())
 					busyDialog.dismiss();
@@ -132,7 +132,7 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 		}
 
 		private void processLogin() {
-			final Context c = getApplicationContext();
+			Context c = getApplicationContext();
 			Prefs.setLoggedIn(c, true);
 			setResult(ReaderExtension.RESULT_LOGIN);
 			finish();

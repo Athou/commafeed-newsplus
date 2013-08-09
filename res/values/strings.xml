@@ -8,8 +8,8 @@
     <string name="hello_world">Hello world!</string>
     
     <!-- Extension -->
-    <string name="extension_name">Google Reader Clone</string>
-    <string name="extension_description">Description for Google Reader Clone</string>
+    <string name="extension_name">CommaFeed</string>
+    <string name="extension_description">CommaFeed extension for News+</string>
     <string name="extension_settings_title">Settings</string>
     <string name="extension_login_title">Login</string>
     <string name="msg_login_running">Login…</string>
@@ -17,7 +17,7 @@
 
     <!-- login -->
     <string name="login_welcome">Enter your login data (server, username and password)</string>
-    <string name="login_server">Server (http://google.com)</string>
+    <string name="login_server">Server</string>
     <string name="login_id">Username</string>
     <string name="login_password">Password</string>
     <string name="txt_login">Login</string>
@@ -28,7 +28,7 @@
     <string name="err_io">Network error</string>
 
     <!-- client -->
-    <string name="client_google_reader">Google Reader Clone</string>
-    <string name="google_reader_login_welcome">Google Reader was the most popular service for reading feeds. This extension allows you to use services that has the same API as Google Reader. It requires <b>News+</b> to work with.</string>
+    <string name="client_google_reader">CommaFeed</string>
+    <string name="google_reader_login_welcome">CommaFeed extension for News+</string>
 
 </resources>
