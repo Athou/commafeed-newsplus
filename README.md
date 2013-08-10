@@ -16,6 +16,5 @@ There's no Play Store link yet.
 How to build the extension from sources
 ---------------------------------------
 
-- run `install-dependencies.sh` (only required once)
 - `mvn clean package`
 - apk is generated at `target/commafeed-newsplus.apk`

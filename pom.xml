@@ -14,6 +14,13 @@
 		<android.plugin.version>3.6.0</android.plugin.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>athou-repo</id>
+			<url>https://github.com/Athou/maven-repository/raw/master/repo</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
