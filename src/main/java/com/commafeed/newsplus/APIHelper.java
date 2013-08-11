@@ -88,9 +88,7 @@ public class APIHelper {
 		item.subUid = PREFIX_SUB + entry.getFeedId();
 		item.title = entry.getTitle();
 		item.updatedTime = entry.getInsertedDate().getTime();
-		if (entry.isStarred()) {
-			item.addCategory(STARRED_TAG_ID);
-		}
+
 		return item;
 	}
 

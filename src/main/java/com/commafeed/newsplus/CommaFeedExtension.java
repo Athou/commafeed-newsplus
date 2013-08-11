@@ -87,6 +87,12 @@ public class CommaFeedExtension extends ReaderExtension {
 		List<ISubscription> subs = new ArrayList<ISubscription>();
 		handleCategory(root, tags, subs);
 
+		ITag starredTag = new ITag();
+		starredTag.uid = APIHelper.STARRED_TAG_ID;
+		starredTag.label = APIHelper.STARRED_TAG_ID;
+		starredTag.type = ITag.TYPE_TAG_STARRED;
+		starredTag.unreadCount = 0;
+		tags.add(starredTag);
 		try {
 			tagHandler.tags(tags);
 			subHandler.subscriptions(subs);
@@ -165,7 +171,7 @@ public class CommaFeedExtension extends ReaderExtension {
 		long newerThan = handler.startTime();
 
 		Entries entries = null;
-		if (uid.startsWith(ReaderExtension.STATE_STARRED)) {
+		if (uid.startsWith(APIHelper.STARRED_TAG_ID)) {
 			entries = client.categoryEntries("starred", readType, newerThan, offset, limit, order, false);
 		} else if (uid.startsWith(ReaderExtension.STATE_READING_LIST)) {
 			entries = client.categoryEntries("all", readType, newerThan, offset, limit, order, false);
@@ -235,7 +241,7 @@ public class CommaFeedExtension extends ReaderExtension {
 			mmr.getRequests().add(req);
 		}
 		client.entryMarkMultiple(mmr);
-		return false;
+		return true;
 	}
 
 	/**
@@ -259,7 +265,7 @@ public class CommaFeedExtension extends ReaderExtension {
 				client.entryStar(sr);
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
