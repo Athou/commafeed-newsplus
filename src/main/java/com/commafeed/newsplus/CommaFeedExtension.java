@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpAuthentication;
 import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpHeaders;
@@ -67,6 +68,7 @@ public class CommaFeedExtension extends ReaderExtension {
 				HttpHeaders headers = req.getHeaders();
 				HttpAuthentication auth = new HttpBasicAuthentication(Prefs.getUserName(context), Prefs.getUserPassword(context));
 				headers.setAuthorization(auth);
+				headers.setAcceptEncoding(ContentCodingType.GZIP);
 				return execution.execute(req, body);
 			}
 		};
