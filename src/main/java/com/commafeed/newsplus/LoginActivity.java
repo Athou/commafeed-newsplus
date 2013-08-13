@@ -15,6 +15,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.noinnion.android.reader.api.ReaderException;
 import com.noinnion.android.reader.api.ReaderExtension;
+import com.noinnion.android.reader.api.util.Utils;
 
 public class LoginActivity extends FragmentActivity implements OnClickListener, OnEditorActionListener {
 
@@ -83,7 +84,7 @@ public class LoginActivity extends FragmentActivity implements OnClickListener, 
 		String userName = userNameText.getText().toString();
 		String password = passwordText.getText().toString();
 		if (server.length() == 0 || userName.length() == 0 || password.length() == 0) {
-			AndroidUtils.showToast(this, getText(R.string.msg_login_fail));
+			Utils.showToast(this, getText(R.string.msg_login_fail));
 		} else {
 			new SaveInputLoginTask().execute(server, userName, password);
 		}
@@ -118,17 +119,17 @@ public class LoginActivity extends FragmentActivity implements OnClickListener, 
 				if (client.ping()) {
 					return true;
 				} else {
-					AndroidUtils.showToast(LoginActivity.this, getText(R.string.msg_login_fail));
+					Utils.showToast(LoginActivity.this, getText(R.string.msg_login_fail));
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				AndroidUtils.showToast(LoginActivity.this, getText(R.string.err_io) + " (" + e.getLocalizedMessage() + ")");
+				Utils.showToast(LoginActivity.this, getText(R.string.err_io) + " (" + e.getLocalizedMessage() + ")");
 			} catch (ReaderException e) {
 				e.printStackTrace();
-				AndroidUtils.showToast(LoginActivity.this, getText(R.string.msg_login_fail));
+				Utils.showToast(LoginActivity.this, getText(R.string.msg_login_fail));
 			} catch (Throwable e) {
 				e.printStackTrace();
-				AndroidUtils.showToast(LoginActivity.this, e.getLocalizedMessage());
+				Utils.showToast(LoginActivity.this, e.getLocalizedMessage());
 			}
 			return null;
 		}
