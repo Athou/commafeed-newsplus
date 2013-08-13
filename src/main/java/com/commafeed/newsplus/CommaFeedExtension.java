@@ -13,9 +13,11 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.CollectionUtils;
 
 import android.content.Context;
 import android.os.RemoteException;
+import android.text.TextUtils;
 
 import com.commafeed.newsplus.model.Category;
 import com.commafeed.newsplus.model.Entries;
@@ -126,14 +128,14 @@ public class CommaFeedExtension extends ReaderExtension {
 
 			Entries entries = null;
 			if (uid.startsWith(ReaderExtension.STATE_STARRED)) {
-				entries = client.categoryEntries("starred", readType, newerThan, 0, limit, order, true);
+				entries = client.categoryEntries("starred", readType, newerThan, 0, limit, order, true, null);
 			} else if (uid.startsWith(ReaderExtension.STATE_READING_LIST)) {
-				entries = client.categoryEntries("all", readType, newerThan, 0, limit, order, true);
+				entries = client.categoryEntries("all", readType, newerThan, 0, limit, order, true, null);
 			} else if (APIHelper.isSubscription(uid)) {
 				entries = client.feedEntries(APIHelper.convertID(uid, APIHelper.PREFIX_SUB), readType, newerThan, 0, limit, order, true);
 			} else if (APIHelper.isCategory(uid)) {
-				entries = client
-						.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, 0, limit, order, true);
+				entries = client.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, 0, limit, order,
+						true, null);
 			} else {
 				throw new ReaderException("Unknown reading state");
 			}
@@ -169,17 +171,27 @@ public class CommaFeedExtension extends ReaderExtension {
 		String order = handler.newestFirst() ? "desc" : "asc";
 		int limit = Math.min(handler.limit(), 50);
 		long newerThan = handler.startTime();
+		List<String> excludedStreams = handler.excludedStreams();
+
+		String excludedSubscriptionIds = null;
+		if (!CollectionUtils.isEmpty(excludedStreams)) {
+			List<String> converted = new ArrayList<String>();
+			for (String excludedStream : excludedStreams) {
+				converted.add(APIHelper.convertID(excludedStream, APIHelper.PREFIX_SUB));
+			}
+			excludedSubscriptionIds = TextUtils.join(",", converted);
+		}
 
 		Entries entries = null;
 		if (uid.startsWith(APIHelper.STARRED_TAG_ID)) {
-			entries = client.categoryEntries("starred", readType, newerThan, offset, limit, order, false);
+			entries = client.categoryEntries("starred", readType, newerThan, offset, limit, order, false, excludedSubscriptionIds);
 		} else if (uid.startsWith(ReaderExtension.STATE_READING_LIST)) {
-			entries = client.categoryEntries("all", readType, newerThan, offset, limit, order, false);
+			entries = client.categoryEntries("all", readType, newerThan, offset, limit, order, false, excludedSubscriptionIds);
 		} else if (APIHelper.isSubscription(uid)) {
 			entries = client.feedEntries(APIHelper.convertID(uid, APIHelper.PREFIX_SUB), readType, newerThan, offset, limit, order, false);
 		} else if (APIHelper.isCategory(uid)) {
 			entries = client.categoryEntries(APIHelper.convertID(uid, APIHelper.PREFIX_CAT), readType, newerThan, offset, limit, order,
-					false);
+					false, excludedSubscriptionIds);
 		} else {
 			throw new ReaderException("Unknown reading state");
 		}
@@ -204,10 +216,18 @@ public class CommaFeedExtension extends ReaderExtension {
 	}
 
 	@Override
-	public boolean markAllAsRead(String subId, String tagId, long syncTime) throws IOException, ReaderException {
+	public boolean markAllAsRead(String subId, String tagId, String[] excludedSubs, long syncTime) throws IOException, ReaderException {
 		MarkRequest req = new MarkRequest();
+		req.setOlderThan(syncTime * 1000);
 		if (subId == null) {
-			req.setId(APIHelper.convertID(tagId, APIHelper.PREFIX_CAT));
+			req.setId(tagId == null ? "all" : APIHelper.convertID(tagId, APIHelper.PREFIX_CAT));
+			if (excludedSubs != null) {
+				List<Long> excludedIds = new ArrayList<Long>();
+				for (String uid : excludedSubs) {
+					excludedIds.add(Long.valueOf(APIHelper.convertID(uid, APIHelper.PREFIX_SUB)));
+				}
+				req.setExcludedSubscriptions(excludedIds);
+			}
 			client.categoryMark(req);
 		} else {
 			req.setId(APIHelper.convertID(subId, APIHelper.PREFIX_SUB));
@@ -221,7 +241,6 @@ public class CommaFeedExtension extends ReaderExtension {
 		MultipleMarkRequest mmr = new MultipleMarkRequest();
 		for (int i = 0; i < itemUids.length; i++) {
 			MarkRequest req = new MarkRequest();
-			req.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
 			req.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
 			req.setRead(true);
 			mmr.getRequests().add(req);
@@ -235,7 +254,6 @@ public class CommaFeedExtension extends ReaderExtension {
 		MultipleMarkRequest mmr = new MultipleMarkRequest();
 		for (int i = 0; i < itemUids.length; i++) {
 			MarkRequest req = new MarkRequest();
-			req.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
 			req.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
 			req.setRead(false);
 			mmr.getRequests().add(req);

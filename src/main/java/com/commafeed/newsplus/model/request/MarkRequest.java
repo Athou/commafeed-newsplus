@@ -1,14 +1,15 @@
 package com.commafeed.newsplus.model.request;
 
 import java.io.Serializable;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class MarkRequest implements Serializable {
 
 	private String id;
-	private Long feedId;
 	private boolean read;
 	private Long olderThan;
+	private List<Long> excludedSubscriptions;
 
 	public String getId() {
 		return id;
@@ -34,12 +35,12 @@ public class MarkRequest implements Serializable {
 		this.olderThan = olderThan;
 	}
 
-	public Long getFeedId() {
-		return feedId;
+	public List<Long> getExcludedSubscriptions() {
+		return excludedSubscriptions;
 	}
 
-	public void setFeedId(Long feedId) {
-		this.feedId = feedId;
+	public void setExcludedSubscriptions(List<Long> excludedSubscriptions) {
+		this.excludedSubscriptions = excludedSubscriptions;
 	}
 
 }

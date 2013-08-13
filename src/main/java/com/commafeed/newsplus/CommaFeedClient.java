@@ -52,8 +52,8 @@ public interface CommaFeedClient {
 	@Post("/category/add")
 	Long categoryAdd(AddCategoryRequest addCategoryRequest);
 
-	@Get("/category/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}&onlyIds={onlyIds}")
-	Entries categoryEntries(String id, String readType, long newerThan, int offset, int limit, String order, boolean onlyIds);
+	@Get("/category/entries?id={id}&readType={readType}&newerThan={newerThan}&offset={offset}&limit={limit}&order={order}&onlyIds={onlyIds}&excludedSubscriptionIds={excludedSubscriptionIds}")
+	Entries categoryEntries(String id, String readType, long newerThan, int offset, int limit, String order, boolean onlyIds, String excludedSubscriptionIds);
 
 	@Post("/category/delete")
 	void categoryDelete(IDRequest idRequest);
