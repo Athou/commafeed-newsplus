@@ -1,7 +1,6 @@
 package com.commafeed.newsplus;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.commafeed.newsplus.model.Category;
@@ -81,13 +80,12 @@ public class APIHelper {
 		item.link = entry.getUrl();
 		item.media = entry.getEnclosureUrl();
 		item.mediaType = entry.getEnclosureType();
-		item.publishedTime = entry.getDate().getTime();
+		item.publishedTime = entry.getDate().getTime() / 1000;
+		item.updatedTime = entry.getDate().getTime() / 1000;
 		item.read = entry.isRead();
-		item.readTime = new Date().getTime();
 		item.starred = entry.isStarred();
 		item.subUid = PREFIX_SUB + entry.getFeedId();
 		item.title = entry.getTitle();
-		item.updatedTime = entry.getInsertedDate().getTime();
 
 		return item;
 	}
