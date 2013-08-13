@@ -54,7 +54,7 @@ public class APIHelper {
 		isub.unreadCount = (int) sub.getUnread();
 		isub.sortid = String.valueOf(sub.getPosition());
 		if (sub.getNewestItemTime() != null) {
-			isub.newestItemTime = sub.getNewestItemTime().getTime();
+			isub.newestItemTime = sub.getNewestItemTime().getTime() / 1000;
 		}
 		if (sub.getCategoryId() != null) {
 			isub.addCategory(PREFIX_CAT + sub.getCategoryId());
