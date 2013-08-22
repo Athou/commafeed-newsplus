@@ -131,7 +131,7 @@ public class LoginActivity extends FragmentActivity implements OnClickListener, 
 				e.printStackTrace();
 				Utils.showToast(LoginActivity.this, e.getLocalizedMessage());
 			}
-			return null;
+			return false;
 		}
 
 		protected void onPostExecute(Boolean result) {
