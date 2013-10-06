@@ -57,7 +57,7 @@ public class APIHelper {
 			isub.newestItemTime = sub.getNewestItemTime().getTime() / 1000;
 		}
 		if (sub.getCategoryId() != null) {
-			isub.addCategory(PREFIX_CAT + sub.getCategoryId());
+			isub.addTag(PREFIX_CAT + sub.getCategoryId());
 		}
 		return isub;
 	}
@@ -76,10 +76,7 @@ public class APIHelper {
 		item.uid = PREFIX_ENTRY + entry.getId();
 		item.author = entry.getAuthor();
 		item.content = entry.getContent();
-		item.forceUpdate = false;
 		item.link = entry.getUrl();
-		item.media = entry.getEnclosureUrl();
-		item.mediaType = entry.getEnclosureType();
 		item.publishedTime = entry.getDate().getTime() / 1000;
 		item.updatedTime = entry.getDate().getTime() / 1000;
 		item.read = entry.isRead();

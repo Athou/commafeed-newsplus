@@ -205,13 +205,13 @@ public class CommaFeedExtension extends ReaderExtension {
 			items.add(item);
 			if (count == 200 || length > 300000) {
 				// prevent TransactionTooLargeException, android only allows 1mb per transaction
-				handler.items(items, INSERT_STRATEGY_DEFAULT);
+				handler.items(items, STRATEGY_INSERT_DEFAULT);
 				count = 0;
 				length = 0;
 				items.clear();
 			}
 		}
-		handler.items(items, INSERT_STRATEGY_DEFAULT);
+		handler.items(items, STRATEGY_INSERT_DEFAULT);
 		return entries;
 	}
 
