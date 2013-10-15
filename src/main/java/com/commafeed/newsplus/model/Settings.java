@@ -2,7 +2,10 @@ package com.commafeed.newsplus.model;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 @SuppressWarnings("serial")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Settings implements Serializable {
 
 	private String language;

@@ -3,7 +3,10 @@ package com.commafeed.newsplus.model;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 @SuppressWarnings("serial")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerInfo implements Serializable {
 
 	private String announcement;

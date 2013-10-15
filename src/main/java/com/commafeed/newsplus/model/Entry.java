@@ -2,8 +2,12 @@ package com.commafeed.newsplus.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @SuppressWarnings("serial")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Entry implements Serializable {
 
 	private String id;
@@ -25,6 +29,7 @@ public class Entry implements Serializable {
 	private boolean read;
 	private boolean starred;
 	private boolean markable;
+	private List<String> tags;
 
 	public String getId() {
 		return id;
@@ -178,4 +183,11 @@ public class Entry implements Serializable {
 		this.markable = markable;
 	}
 
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
 }

@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.noinnion.android.reader.api</groupId>
 			<artifactId>reader-api-r1</artifactId>
-			<version>v0.0.15beta</version>
+			<version>v0.0.20beta</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.androidannotations</groupId>

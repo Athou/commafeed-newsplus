@@ -3,7 +3,10 @@ package com.commafeed.newsplus.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 @SuppressWarnings("serial")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Subscription implements Serializable {
 
 	private Long id;
