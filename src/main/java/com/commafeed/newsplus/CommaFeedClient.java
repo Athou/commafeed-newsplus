@@ -21,6 +21,7 @@ import com.commafeed.newsplus.model.request.MarkRequest;
 import com.commafeed.newsplus.model.request.MultipleMarkRequest;
 import com.commafeed.newsplus.model.request.StarRequest;
 import com.commafeed.newsplus.model.request.SubscribeRequest;
+import com.commafeed.newsplus.model.request.TagRequest;
 import com.googlecode.androidannotations.annotations.rest.Get;
 import com.googlecode.androidannotations.annotations.rest.Post;
 import com.googlecode.androidannotations.annotations.rest.Rest;
@@ -105,6 +106,9 @@ public interface CommaFeedClient {
 
 	@Post("/entry/star")
 	void entryStar(StarRequest starRequest);
+	
+	@Post("/entry/tag")
+	void entryTag(TagRequest tagRequest);
 
 	@Get("/entry/search")
 	Entries entrySearch();

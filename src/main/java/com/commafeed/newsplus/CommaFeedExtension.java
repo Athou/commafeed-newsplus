@@ -266,21 +266,21 @@ public class CommaFeedExtension extends ReaderExtension {
 	 * star or unstar items
 	 */
 	@Override
-	public boolean editItemTag(String[] itemUids, String[] subUids, String[] addTags, String[] removeTags) throws IOException,
-			ReaderException {
+	public boolean editItemTag(String[] itemUids, String[] subUids, String[] tags, int action) throws IOException, ReaderException {
 		for (int i = 0; i < itemUids.length; i++) {
-			if (addTags != null && addTags[i].startsWith(APIHelper.STARRED_TAG_ID)) {
-				StarRequest sr = new StarRequest();
-				sr.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
-				sr.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
-				sr.setStarred(true);
-				client.entryStar(sr);
-			} else if (removeTags != null && removeTags[i].startsWith(APIHelper.STARRED_TAG_ID)) {
-				StarRequest sr = new StarRequest();
-				sr.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
-				sr.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
-				sr.setStarred(false);
-				client.entryStar(sr);
+			if (tags != null) {
+				
+				for (String tag : tags) {
+					if (tag.startsWith(APIHelper.STARRED_TAG_ID)) {
+						StarRequest sr = new StarRequest();
+						sr.setId(APIHelper.convertID(itemUids[i], APIHelper.PREFIX_ENTRY));
+						sr.setFeedId(Long.valueOf(APIHelper.convertID(subUids[i], APIHelper.PREFIX_SUB)));
+						sr.setStarred(action != ACTION_ITEM_TAG_REMOVE_LABEL);
+						client.entryStar(sr);
+					} else {
+						// TODO handle tags
+					}
+				}
 			}
 		}
 		return true;
@@ -313,7 +313,7 @@ public class CommaFeedExtension extends ReaderExtension {
 	 * add, delete, rename a subscription or change its category
 	 */
 	@Override
-	public boolean editSubscription(String uid, String title, String url, String[] tags, int action, long syncTime) throws IOException,
+	public boolean editSubscription(String uid, String title, String url, String[] tags, int action) throws IOException,
 			ReaderException {
 
 		Long id = Long.valueOf(APIHelper.convertID(uid, APIHelper.PREFIX_SUB));
@@ -322,24 +322,24 @@ public class CommaFeedExtension extends ReaderExtension {
 			categoryId = APIHelper.convertID(tags[0], APIHelper.PREFIX_CAT);
 		}
 
-		if (action == ReaderExtension.SUBSCRIPTION_ACTION_SUBCRIBE) {
+		if (action == ReaderExtension.ACTION_SUBSCRIPTION_SUBCRIBE) {
 			SubscribeRequest sr = new SubscribeRequest();
 			sr.setUrl(url);
 			sr.setTitle(title);
 			sr.setCategoryId(categoryId);
 			client.feedSubscribe(sr);
-		} else if (action == ReaderExtension.SUBSCRIPTION_ACTION_UNSUBCRIBE) {
+		} else if (action == ReaderExtension.ACTION_SUBSCRIPTION_UNSUBCRIBE) {
 			IDRequest idr = new IDRequest();
 			idr.setId(id);
 			client.feedUnsubscribe(idr);
-		} else if (action == ReaderExtension.SUBSCRIPTION_ACTION_EDIT) {
+		} else if (action == ReaderExtension.ACTION_SUBSCRIPTION_EDIT) {
 			FeedModificationRequest fmr = new FeedModificationRequest();
 			fmr.setId(id);
 			fmr.setName(title);
 			fmr.setCategoryId(categoryId);
 			client.feedModify(fmr);
-		} else if (action == ReaderExtension.SUBSCRIPTION_ACTION_NEW_LABEL || action == ReaderExtension.SUBSCRIPTION_ACTION_ADD_LABEL) {
-			if (action == ReaderExtension.SUBSCRIPTION_ACTION_NEW_LABEL) {
+		} else if (action == ReaderExtension.ACTION_SUBSCRIPTION_NEW_LABEL || action == ReaderExtension.ACTION_SUBSCRIPTION_ADD_LABEL) {
+			if (action == ReaderExtension.ACTION_SUBSCRIPTION_NEW_LABEL) {
 				AddCategoryRequest req = new AddCategoryRequest();
 				req.setName(tags[0]);
 				categoryId = String.valueOf(client.categoryAdd(req));
@@ -349,7 +349,7 @@ public class CommaFeedExtension extends ReaderExtension {
 			fmr.setName(title);
 			fmr.setCategoryId(categoryId);
 			client.feedModify(fmr);
-		} else if (action == ReaderExtension.SUBSCRIPTION_ACTION_REMOVE_LABEL) {
+		} else if (action == ReaderExtension.ACTION_SUBSCRIPTION_REMOVE_LABEL) {
 			FeedModificationRequest fmr = new FeedModificationRequest();
 			fmr.setId(id);
 			fmr.setName(title);
