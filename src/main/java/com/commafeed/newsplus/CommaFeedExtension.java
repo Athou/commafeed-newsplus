@@ -269,7 +269,7 @@ public class CommaFeedExtension extends ReaderExtension {
 	public boolean editItemTag(String[] itemUids, String[] subUids, String[] tags, int action) throws IOException, ReaderException {
 		for (int i = 0; i < itemUids.length; i++) {
 			if (tags != null) {
-				
+
 				for (String tag : tags) {
 					if (tag.startsWith(APIHelper.STARRED_TAG_ID)) {
 						StarRequest sr = new StarRequest();
@@ -313,10 +313,12 @@ public class CommaFeedExtension extends ReaderExtension {
 	 * add, delete, rename a subscription or change its category
 	 */
 	@Override
-	public boolean editSubscription(String uid, String title, String url, String[] tags, int action) throws IOException,
-			ReaderException {
+	public boolean editSubscription(String uid, String title, String url, String[] tags, int action) throws IOException, ReaderException {
 
-		Long id = Long.valueOf(APIHelper.convertID(uid, APIHelper.PREFIX_SUB));
+		Long id = null;
+		if (uid != null) {
+			id = Long.valueOf(APIHelper.convertID(uid, APIHelper.PREFIX_SUB));
+		}
 		String categoryId = null;
 		if (tags != null && tags.length > 0) {
 			categoryId = APIHelper.convertID(tags[0], APIHelper.PREFIX_CAT);
