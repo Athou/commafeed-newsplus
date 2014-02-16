@@ -6,8 +6,8 @@ How to install on your device
 
 There's no Play Store link yet. 
 
-- [Allow unknown sources](http://developer.android.com/distribute/open.html#unknown-sources).
-- Download News+ and its CommaFeed extension from the [dist](https://github.com/Athou/commafeed-newsplus/tree/master/dist) directory and install them on your device.
+- Download the extension from the Play Store: https://play.google.com/store/apps/details?id=com.commafeed.newsplus
+- Launch the App. You will be prompted to install News+. Install it.
 - Launch News+ and click "All items/Google News" in the top-left corner. 
 - Select CommaFeed.
 
